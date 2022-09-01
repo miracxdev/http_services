@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:http_services/ui/home_screen/controller/home_controller.dart';
 import 'package:http_services/ui/home_screen/view/home_view.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => HomeController())],
+      child: MyApp(),
+    ));
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -14,7 +17,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-    
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,

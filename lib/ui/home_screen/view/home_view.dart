@@ -1,8 +1,7 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:http_services/app/models/response/home_response.dart';
-import 'package:http_services/app/services/http_services.dart';
+
 import 'package:http_services/ui/home_screen/controller/home_controller.dart';
+import 'package:provider/provider.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -11,31 +10,32 @@ class HomeView extends StatefulWidget {
   State<HomeView> createState() => _HomeViewState();
 }
 
-
 class _HomeViewState extends State<HomeView> {
-
-HomeController homeController = HomeController();
-
-
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-
-    homeController.getData();
+    final controller = Provider.of<HomeController>(context, listen: false);
+    controller.getData();
   }
-
 
   @override
   Widget build(BuildContext context) {
+    final controller = context.watch<HomeController>();
     return Scaffold(
       appBar: AppBar(title: Text("Anasayfa")),
-      body: ListView.builder(
-        itemCount: homeController.homeResponseList.length,
-        itemBuilder: (context, index) => ListTile(
-          title: Text(homeController.homeResponseList[index].title!),
-        ),
-      ),
+      body: controller.homeResponseList!.isEmpty
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: controller.homeResponseList!.length,
+              itemBuilder: (context, index) => Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListTile(
+                  leading: Image.network(
+                      controller.homeResponseList![index].url ?? ""),
+                  title: Text(controller.homeResponseList![index].title ?? ""),
+                ),
+              ),
+            ),
     );
   }
 }
